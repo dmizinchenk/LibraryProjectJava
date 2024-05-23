@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"  xmlns:th="http://www.thymeleaf.org">
+    <title>Title</title>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,900,900italic,700italic,700,500italic,400italic,500,300italic,300'
+          rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+    <link href='/styles/style.css' rel='stylesheet' type='text/css'>
+    <link href='/styles/detail.css' rel='stylesheet' type='text/css'>
+</head>
+<body>
+    <th:block th:insert="~{/ui/layouts/header.html::headerLayout}"></th:block>
+    <div id="wrapper-container">
+
+        <div class="container object">
+
+            <div id="main-container-image">
+
+                <div class="title-item" >
+<!--                    <a th:href="@{/}">-->
+<!--                        <div class="title-icon"></div>-->
+<!--                    </a>-->
+
+                    <div class="title-text" th:each="author : ${book.authors}">
+                        <p th:text="${author}"></p>
+                    </div>
+                    <div class="title-text-2" th:text="${book.title}"></div>
+                </div>
+
+                <div class="work">
+                    <figure class="white">
+                        <img th:src="@{'/img/Books/' + ${book.title} + '.webp'}" alt="/img/no_image.png" style="width: 250px; height: 250px" />
+                    </figure>
+
+                    <div class="wrapper-text-description">
+                        <div class="wrapper-desc">
+                            <div class="text-desc" th:text="${book.annotation}"></div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+
+            <form th:action="@{/}" style="margin-left: 15px;">
+                <input type="submit" value="На главную">
+            </form>
+<!--            <form th:action="@{/}" style="margin-left: 15px;">-->
+<!--                <input type="submit" value="Запросить книгу">-->
+<!--            </form>-->
+            <form method="get" th:action="@{'/edit/' + ${book.id}}" style="margin-left: 15px;">
+                <input type="submit" value="Редактировать">
+            </form>
+<!--            <form th:action="@{/}" style="margin-left: 15px;">-->
+<!--                <input type="submit" value="Удалить">-->
+<!--            </form>-->
+        </div>
+    </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script type="text/javascript" src="/js/main.min.js"></script>
+</body>
+</html>

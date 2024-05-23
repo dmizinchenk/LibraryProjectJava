@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,900,900italic,700italic,700,500italic,400italic,500,300italic,300'
+          rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+    <link href='/styles/style.css' rel='stylesheet' type='text/css'>
+    <link href='/styles/formStyle.css' rel='stylesheet' type='text/css'>
+</head>
+<body>
+    <th:block th:insert="~{/ui/layouts/header.html::headerLayout}"></th:block>
+    <div id="wrapper-container">
+        <!-- Container Start -->
+        <div id="container">
+            <!-- Form Wrap Start -->
+            <div class="form-wrap">
+                <select multiple>
+                    <option>Чебурашка</option>
+                    <option>Крокодил Гена</option>
+                    <option>Шапокляк</option>
+                    <option>Крыса Лариса</option>
+                </select>
+                <form action="#" method="post">
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" name="firstname" id="title">
+                    </div>
+                    <div class="form-group">
+                        <label for="annotation">Annotation</label>
+                        <textarea name="firstname" id="annotation"></textarea>
+                    </div>
+
+                    <button type="submit">Save</button>
+
+                </form>
+                <form action="#" method="get">
+                    <button type="submit">Back</button>
+                </form>
+                <!-- Form Close -->
+            </div>
+            <!-- Form Wrap Close -->
+        </div>
+    </div>
+</body>
+</html>
