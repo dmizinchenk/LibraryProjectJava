@@ -4,6 +4,7 @@ package ru.Zinchenko.LibraryProject.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,13 +15,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.Zinchenko.LibraryProject.models.Author;
 import ru.Zinchenko.LibraryProject.models.Book;
 import ru.Zinchenko.LibraryProject.models.DTO.BookDTO;
+import ru.Zinchenko.LibraryProject.models.Order;
 import ru.Zinchenko.LibraryProject.security.entity.User;
 import ru.Zinchenko.LibraryProject.security.securityUser.SecurityUser;
+import ru.Zinchenko.LibraryProject.services.implementations.OrderServiceImplementation;
+import ru.Zinchenko.LibraryProject.services.implementations.UserServiceImplementation;
 import ru.Zinchenko.LibraryProject.services.interfaces.AuthorService;
 import ru.Zinchenko.LibraryProject.services.interfaces.BookService;
+import ru.Zinchenko.LibraryProject.services.interfaces.UserService;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -30,6 +36,8 @@ import java.util.stream.Collectors;
 public class LibraryController {
     private final BookService bookService;
     private final AuthorService authorService;
+    private final UserServiceImplementation userService;
+    private final OrderServiceImplementation orderService;
 
     @GetMapping("/")
     public String home(@RequestParam(name = "search", required = false) String find, @RequestParam(name = "page", required = false) String page, Model model){
@@ -74,13 +82,29 @@ public class LibraryController {
     @GetMapping(value = "/book/{id}")
     public String categoryCatalogue(@PathVariable int id, Model model) {
         Book book = bookService.findOne(id);
-
         BookDTO dto = new BookDTO(book.getId(), book.getAuthors().stream().map(Author::getFullName).collect(Collectors.toList()), book.getTitle(), book.getAnnotation());
         model.addAttribute("book", dto);
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User curUser = userService.findByUsername(auth.getName());
+        Optional<Order> order = orderService.findLastOrderByBookAndUser(curUser.getId(), id);
+        boolean isHaveBook = false;
+        boolean isCanReturn = false;
+        if(order.isPresent()){
+            Order o = order.get();
+            if(o.getBook().equals(book)){
+                isHaveBook = true;
+            }
+            if(o.getBook().equals(book) && o.isHaveOwner() && o.isHandled()){
+                isCanReturn = true;
+            }
+        }
+        model.addAttribute("isCanGet", !isHaveBook);
+        model.addAttribute("isCanReturn", isCanReturn);
         return "ui/pages/detail";
     }
 
-    @GetMapping("/edit/{id}")
+    @GetMapping("/book/{id}/edit")
     public String editbook(@PathVariable int id, Model model){
 
         // TODO: внедрить список авторов и книгу для формы

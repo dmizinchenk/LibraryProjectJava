@@ -11,7 +11,6 @@ import java.util.List;
 @Repository
 public interface BookRepository extends JpaRepository<Book, Integer> {
     List<Book> findBookByTitleLikeIgnoreCase(String title);
-//    @Query("select b from Blog b join fetch b.tags where b.name = :name")
     @Query(value = "SELECT books.* " +
             "FROM books " +
             "LEFT JOIN authorsbooks ab on books.id = ab.bookid " +

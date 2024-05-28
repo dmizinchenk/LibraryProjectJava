@@ -10,7 +10,7 @@ CREATE TABLE Users
     password VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     role VARCHAR(50) NOT NULL DEFAULT 'ROLE_CUSTOMER',
-    isblocked BOOLEAN DEFAULT FALSE
+    is_blocked BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE Authors
@@ -27,20 +27,21 @@ CREATE TABLE Books
     title VARCHAR(50) NOT NULL,
     annotation text NULL,
     dateOfRent date DEFAULT NULL,
-    userId int REFERENCES Users(id) ON DELETE SET NULL DEFAULT NULL
+    user_id int REFERENCES Users(id) ON DELETE SET NULL DEFAULT NULL
 );
 
 CREATE TABLE Orders
 (
     id SERIAL PRIMARY KEY ,
-    bookId int REFERENCES Books(id) NOT NULL,
-    userId int REFERENCES Users(id) NOT NULL,
-    isApproved bool NULL
+    bookid int REFERENCES Books(id) NOT NULL,
+    userid int REFERENCES Users(id), --NOT NULL,
+    is_handled bool NULL DEFAULT FALSE,
+    have_owner bool DEFAULT TRUE
 );
 
 CREATE TABLE AuthorsBooks
 (
     id SERIAL PRIMARY KEY,
-    bookId int REFERENCES Books(id) NOT NULL,
-    authorId int REFERENCES Authors(id) NULL
+    bookid int REFERENCES Books(id) NOT NULL,
+    authorid int REFERENCES Authors(id) NULL
 )

@@ -49,7 +49,7 @@ public class AdminController {
 
     @PostMapping("/edit/{id}")
     public String editUser(@ModelAttribute("user") User user){
-        userService.update(user);
+        userService.updateWithPassword(user);
         return "redirect:/admin";
     }
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"  xmlns:th="http://www.thymeleaf.org">
+    <meta charset="UTF-8" >
     <title>Title</title>
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,900,900italic,700italic,700,500italic,400italic,500,300italic,300'
           rel='stylesheet' type='text/css'>
@@ -44,15 +44,19 @@
 
             </div>
 
-            <form th:action="@{/}" style="margin-left: 15px;">
-                <input type="submit" value="На главную">
+            <form th:action="@{/}">
+                <input type="submit" value="На главную" style="margin-left: 15px;">
             </form>
-<!--            <form th:action="@{/}" style="margin-left: 15px;">-->
-<!--                <input type="submit" value="Запросить книгу">-->
-<!--            </form>-->
+            <form th:if="${isCanGet}" method="post" th:action="@{'/order/getBook/' + ${book.id}}">
+                <input type="submit" value="Запросить книгу" style="margin-left: 15px; background-color: #66CC7A;">
+            </form>
+            <form th:if="${isCanReturn}" method="post" th:action="@{'/order/returnBook/' + ${book.id}}">
+                <input type="submit" value="Вернуть книгу" style="margin-left: 15px; background-color: lightcoral;">
+            </form>
             <form method="get" th:action="@{'/edit/' + ${book.id}}" style="margin-left: 15px;">
-                <input type="submit" value="Редактировать">
+                <input type="submit" value="Редактировать" style="margin-left: 15px;">
             </form>
+            <br>
 <!--            <form th:action="@{/}" style="margin-left: 15px;">-->
 <!--                <input type="submit" value="Удалить">-->
 <!--            </form>-->

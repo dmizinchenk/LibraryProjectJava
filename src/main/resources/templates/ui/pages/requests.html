@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" >
+    <title>Requests</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+<!--    <th:block th:insert="~{ui/layouts/header.html::headerLayout}"></th:block>-->
+
+    <div class="row">
+        <div class="w-50 mx-auto container">
+            <ul class="list-group cProductsList">
+                <li th:each="request : ${requests}"  class="list-group-item d-flex">
+                    <p class="p-0 m-0 flex-grow-1" th:text="${request.getUser().getUsername()} + ': ' + ${request.getBook().getTitle()}"></p>
+                    <form style="display: inline-block" th:method="POST" th:action="@{${action} + '/approve/{id}'(id=*{request.id})}">
+                        <input class="btn btn-success" type="submit" value="Accept">
+                    </form>
+                    <form style="display: inline-block" th:method="POST" th:action="@{${action} + '/decline/{id}'(id=*{request.id})}">
+                        <input class="btn btn-danger" type="submit" value="Decline">
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

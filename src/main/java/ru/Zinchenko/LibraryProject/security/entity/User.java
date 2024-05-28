@@ -4,13 +4,13 @@ package ru.Zinchenko.LibraryProject.security.entity;
 import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ru.Zinchenko.LibraryProject.models.Book;
 import ru.Zinchenko.LibraryProject.models.DTO.UserDTO;
+import ru.Zinchenko.LibraryProject.models.Order;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,7 +29,7 @@ public class User implements UserDetails {
     private String name;
     @Column(name = "email")
     private String username;
-    @Column(name = "isblocked")
+    @Column(name = "is_blocked")
     private boolean isBloked;
     @Column(name = "password")
     private String password;
@@ -38,17 +38,10 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Role role;
-//
-//    public User(String name, String username, String password) {
-//        this.name = name;
-//        this.username = username;
-//        this.password = password;
-//    }
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Order> orders = new ArrayList<>();
 
-    public User() {
-//        this.role = Role.ROLE_CUSTOMER;
-//        System.out.println("User 43");
-    }
+    public User() {}
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -84,7 +77,8 @@ public class User implements UserDetails {
                 dto.isBloked(),
                 encoder.encode(dto.getPassword()),
                 new ArrayList<>(),
-                dto.getRole()
+                dto.getRole(),
+                new ArrayList<>()
                 );
     }
 

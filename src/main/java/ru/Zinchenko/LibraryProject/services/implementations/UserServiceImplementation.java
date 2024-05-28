@@ -21,6 +21,10 @@ public class UserServiceImplementation implements UserService {
         this.repository = repository;
     }
 
+    public User findByUsername(String username){
+        return repository.findByUsername(username).orElse(null);
+    }
+
     @Override
     public List<User> findAll() {
         return repository.findAll();
@@ -45,17 +49,23 @@ public class UserServiceImplementation implements UserService {
         if (!repository.existsById(user.getId())) {
             return null;
         }
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
         User toUpdate = findOne(user.getId());
 
         toUpdate.setName(user.getName());
         toUpdate.setUsername(user.getUsername());
-        toUpdate.setPassword(encoder.encode(user.getPassword()));
         toUpdate.setBooks(user.getBooks());
         toUpdate.setBloked(user.isBloked());
         toUpdate.setRole(user.getRole());
+        toUpdate.setOrders(user.getOrders());
 
         repository.save(toUpdate);
+        return toUpdate;
+    }
+
+    public User updateWithPassword(User user){
+        User toUpdate = update(user);
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+        toUpdate.setPassword(encoder.encode(user.getPassword()));
         return toUpdate;
     }
 
