@@ -20,15 +20,16 @@ public class RegistrationController {
     private final RegistrationService service;
     private final UserValidator validator;
 
-    @PostMapping
-    public String register(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
+    @PostMapping()
+    public String register(@ModelAttribute("user") User user, BindingResult bindingResult) {
         validator.validate(user, bindingResult);
+        System.out.println(user);
 
         if(bindingResult.hasErrors())
             return "ui/pages/login";
 
         user.setRole(Role.ROLE_CUSTOMER);
-        user.setBooks(new ArrayList<>());
+        user.setOrders(new ArrayList<>());
 
         service.register(user);
 

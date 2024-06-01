@@ -33,8 +33,8 @@ public class User implements UserDetails {
     private boolean isBloked;
     @Column(name = "password")
     private String password;
-    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
-    private List<Book> books = new ArrayList<>();
+//    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
+//    private List<Book> books = new ArrayList<>();
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Role role;
@@ -76,7 +76,7 @@ public class User implements UserDetails {
                 dto.getUsername(),
                 dto.isBloked(),
                 encoder.encode(dto.getPassword()),
-                new ArrayList<>(),
+//                new ArrayList<>(),
                 dto.getRole(),
                 new ArrayList<>()
                 );
@@ -95,5 +95,26 @@ public class User implements UserDetails {
 
     public void setBloked(boolean bloked) {
         isBloked = bloked;
+    }
+
+    public User copyWithoutPassword(User user){
+        this.setName(user.getName());
+        this.setUsername(user.getUsername());
+        this.setBloked(user.isBloked());
+        this.setRole(user.getRole());
+        this.setOrders(user.getOrders());
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", username='" + username + '\'' +
+                ", isBloked=" + isBloked +
+                ", password='" + password + '\'' +
+                ", role=" + role +
+                '}';
     }
 }

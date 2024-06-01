@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"  xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8" >
     <title>Title</title>
@@ -53,13 +53,13 @@
             <form th:if="${isCanReturn}" method="post" th:action="@{'/order/returnBook/' + ${book.id}}">
                 <input type="submit" value="Вернуть книгу" style="margin-left: 15px; background-color: lightcoral;">
             </form>
-            <form method="get" th:action="@{'/edit/' + ${book.id}}" style="margin-left: 15px;">
+            <form sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE')" method="get" th:action="@{'/book/' + ${book.id} + '/edit'}" style="margin-left: 15px;">
                 <input type="submit" value="Редактировать" style="margin-left: 15px;">
             </form>
             <br>
-<!--            <form th:action="@{/}" style="margin-left: 15px;">-->
-<!--                <input type="submit" value="Удалить">-->
-<!--            </form>-->
+            <form sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE')" th:action="@{'/book/' + ${book.id} + '/delete'}" th:method="post">
+                <input type="submit" value="Удалить" style="margin-left: 15px; background-color: #960101">
+            </form>
         </div>
     </div>
 

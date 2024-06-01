@@ -51,22 +51,24 @@ public class UserServiceImplementation implements UserService {
         }
         User toUpdate = findOne(user.getId());
 
-        toUpdate.setName(user.getName());
-        toUpdate.setUsername(user.getUsername());
-        toUpdate.setBooks(user.getBooks());
-        toUpdate.setBloked(user.isBloked());
-        toUpdate.setRole(user.getRole());
-        toUpdate.setOrders(user.getOrders());
-
-        repository.save(toUpdate);
+        repository.save(toUpdate.copyWithoutPassword(user));
         return toUpdate;
     }
 
     public User updateWithPassword(User user){
-        User toUpdate = update(user);
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
-        toUpdate.setPassword(encoder.encode(user.getPassword()));
-        return toUpdate;
+        if (user == null) {
+            return null;
+        } else if (user.getPassword().isEmpty()) {
+            return update(user);
+        } else {
+            User toUpdate = findOne(user.getId());
+
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+            toUpdate.setPassword(encoder.encode(user.getPassword()));
+
+            repository.save(toUpdate.copyWithoutPassword(user));
+            return toUpdate;
+        }
     }
 
     @Override

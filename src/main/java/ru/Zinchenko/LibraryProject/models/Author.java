@@ -20,7 +20,7 @@ public class Author {
     private String surname;
     @Column(name = "middlename")
     private String middleName;
-    @ManyToMany(mappedBy = "authors")
+    @ManyToMany(mappedBy = "authors", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private List<Book> books = new ArrayList<>();
 
     public String getShortInfo() {
@@ -40,5 +40,15 @@ public class Author {
 
     public String getFullName(){
         return surname + " " + name + ((middleName == null || middleName.isEmpty()) ? "" : (" " + middleName));
+    }
+
+    @Override
+    public String toString() {
+        return "Author{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", middleName='" + middleName + '\'' +
+                '}';
     }
 }

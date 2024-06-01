@@ -1,16 +1,20 @@
 package ru.Zinchenko.LibraryProject.services.implementations;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.Zinchenko.LibraryProject.models.Author;
 import ru.Zinchenko.LibraryProject.models.Book;
 import ru.Zinchenko.LibraryProject.models.repositaries.AuthorRepository;
 import ru.Zinchenko.LibraryProject.services.interfaces.AuthorService;
+import ru.Zinchenko.LibraryProject.services.interfaces.BookService;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class AuthorServiceImplementation implements AuthorService {
-    AuthorRepository repository;
+    private final AuthorRepository repository;
+//    private final BookService bookService;
     @Override
     public List<Author> findAll() {
         return repository.findAll();
@@ -44,6 +48,11 @@ public class AuthorServiceImplementation implements AuthorService {
     @Override
     public boolean deleteById(int id) {
         if (repository.existsById(id)) {
+//            Author author = findOne(id);
+//            for (Book b: author.getBooks()) {
+//                b.getAuthors().remove(author);
+//                bookService.update(b);
+//            }
             repository.deleteById(id);
             return true;
         }

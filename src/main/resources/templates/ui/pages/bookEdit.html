@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -16,26 +16,26 @@
         <div id="container">
             <!-- Form Wrap Start -->
             <div class="form-wrap">
-                <select multiple>
-                    <option>Чебурашка</option>
-                    <option>Крокодил Гена</option>
-                    <option>Шапокляк</option>
-                    <option>Крыса Лариса</option>
-                </select>
-                <form action="#" method="post">
+                <form th:object="${book}" th:action="@{'/book' + ${action}}" th:method="post" enctype="multipart/form-data">
+                    <select multiple class="form-control" id="topic" th:field="*{authors}">
+                        <option th:each="author : ${authorsList}"
+                                th:value="${author.getId()}" th:text="${author.getFullName()}"></option>
+                    </select>
                     <div class="form-group">
-                        <label for="title">Title</label>
-                        <input type="text" name="firstname" id="title">
+                        <label for="title">Название</label>
+                        <input type="text" th:field="*{title}" id="title">
                     </div>
                     <div class="form-group">
-                        <label for="annotation">Annotation</label>
-                        <textarea name="firstname" id="annotation"></textarea>
+                        <label for="annotation">Аннотация</label>
+                        <textarea th:field="*{annotation}" id="annotation" style="height: 200px;"></textarea>
                     </div>
 
+                    <label for="cover">Заменить обложку:</label>
+                    <input name="cover" id="cover" type="file" placeholder="Загрузите фото" accept=".webp">
                     <button type="submit">Save</button>
 
                 </form>
-                <form action="#" method="get">
+                <form th:action="@{'/book/' + ${book.getId()}}" method="get">
                     <button type="submit">Back</button>
                 </form>
                 <!-- Form Close -->
@@ -43,5 +43,7 @@
             <!-- Form Wrap Close -->
         </div>
     </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/main.min.js"></script>
 </body>
 </html>

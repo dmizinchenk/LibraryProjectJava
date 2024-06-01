@@ -26,15 +26,15 @@ CREATE TABLE Books
     id SERIAL PRIMARY KEY,
     title VARCHAR(50) NOT NULL,
     annotation text NULL,
-    dateOfRent date DEFAULT NULL,
-    user_id int REFERENCES Users(id) ON DELETE SET NULL DEFAULT NULL
+    dateOfRent date DEFAULT NULL
+--     user_id int REFERENCES Users(id) ON DELETE SET NULL DEFAULT NULL
 );
 
 CREATE TABLE Orders
 (
     id SERIAL PRIMARY KEY ,
-    bookid int REFERENCES Books(id) NOT NULL,
-    userid int REFERENCES Users(id), --NOT NULL,
+    bookid int NOT NULL REFERENCES Books(id),
+    userid int REFERENCES Users(id),
     is_handled bool NULL DEFAULT FALSE,
     have_owner bool DEFAULT TRUE
 );

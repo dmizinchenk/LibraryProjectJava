@@ -50,7 +50,7 @@ public class OrderController {
         Order order = orderService.findOne(id);
 
         User user = order.getUser();
-        user.getBooks().add(order.getBook());
+//        user.getBooks().add(order.getBook());
         userService.update(user);
 
 //        order.setHaveOwner(true);
@@ -77,7 +77,6 @@ public class OrderController {
         Order order = orderService.findOne(id);
 
         User user = order.getUser();
-        user.getBooks().remove(order.getBook());
         user.getOrders().remove(order);
         userService.update(user);
 
@@ -105,7 +104,6 @@ public class OrderController {
         order.setUser(curUser);
         order.setBook(book);
         order.setHandled(false);
-//        order.setHaveOwner(false);
         order.setHaveOwner(true);
         orderService.save(order);
 

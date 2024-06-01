@@ -3,31 +3,29 @@ package ru.Zinchenko.LibraryProject.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.Zinchenko.LibraryProject.models.Author;
 import ru.Zinchenko.LibraryProject.models.Book;
 import ru.Zinchenko.LibraryProject.models.DTO.BookDTO;
 import ru.Zinchenko.LibraryProject.models.Order;
 import ru.Zinchenko.LibraryProject.security.entity.User;
-import ru.Zinchenko.LibraryProject.security.securityUser.SecurityUser;
 import ru.Zinchenko.LibraryProject.services.implementations.OrderServiceImplementation;
 import ru.Zinchenko.LibraryProject.services.implementations.UserServiceImplementation;
 import ru.Zinchenko.LibraryProject.services.interfaces.AuthorService;
 import ru.Zinchenko.LibraryProject.services.interfaces.BookService;
-import ru.Zinchenko.LibraryProject.services.interfaces.UserService;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -68,13 +66,6 @@ public class LibraryController {
         model.addAttribute("books", booksDTO);
         model.addAttribute("page", currentPage);
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        Collection<? extends GrantedAuthority> roles = auth.getAuthorities();
-//        System.out.println("ROLES: ");
-//        for (GrantedAuthority role : roles) {
-//            System.out.println(role.getAuthority());
-//        }
-        System.out.println("user role: " + auth.getAuthorities());
         return "ui/pages/index";
     }
 
@@ -105,10 +96,68 @@ public class LibraryController {
     }
 
     @GetMapping("/book/{id}/edit")
-    public String editbook(@PathVariable int id, Model model){
+    public String editBook(@PathVariable int id, Model model){
 
-        // TODO: внедрить список авторов и книгу для формы
+        Book book = bookService.findOne(id);
+        List<Author> authors = authorService.findAll();
 
+        model.addAttribute("book", book);
+        model.addAttribute("authorsList", authors);
+        model.addAttribute("action", "/" + id + "/edit");
         return "ui/pages/bookEdit";
+    }
+
+    @PostMapping("/book/{id}/edit")
+    public String modifyBook(@ModelAttribute("book") Book book, @RequestParam("cover") MultipartFile file) {
+
+        try{
+            String fileName = file.getOriginalFilename();
+            if (fileName != null && !fileName.isBlank()){
+                String ext = fileName.substring(fileName.lastIndexOf("."));
+                Path path = Paths.get("D:\\Обучение Шаг\\Java\\LibraryProject\\src\\main\\resources\\static\\img\\Books\\" + book.getTitle() + ext);
+                Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+            }
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+
+        bookService.update(book);
+        return "redirect:/book/" + book.getId();
+    }
+    @GetMapping("/book/create")
+    public String newBook(@ModelAttribute("book") Book book, Model model){
+
+        List<Author> authors = authorService.findAll();
+
+        model.addAttribute("authorsList", authors);
+        model.addAttribute("action", "/create");
+        return "ui/pages/bookEdit";
+    }
+
+    @PostMapping("/book/create")
+    public String createBook(@ModelAttribute("book") Book book, @RequestParam("cover") MultipartFile file) {
+
+        try{
+            String fileName = file.getOriginalFilename();
+            if (fileName != null && !fileName.isBlank()){
+                String ext = fileName.substring(fileName.lastIndexOf("."));
+                Path path = Paths.get("D:\\Обучение Шаг\\Java\\LibraryProject\\src\\main\\resources\\static\\img\\Books\\" + book.getTitle() + ext);
+                Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+            }
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+
+        return "redirect:/book/" + bookService.save(book).getId();
+    }
+
+    @PostMapping(value = "/book/{id}/delete")
+    public String deleteBook(@PathVariable int id){
+        bookService.deleteById(id);
+        return "redirect:/";
     }
 }

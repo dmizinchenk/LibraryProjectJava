@@ -18,7 +18,7 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
     @JoinTable(name = "authorsbooks", joinColumns = @JoinColumn(name = "bookid"), inverseJoinColumns = @JoinColumn(name = "authorid"))
     private List<Author> authors = new ArrayList<>();
 
@@ -28,14 +28,23 @@ public class Book {
     @Column(name = "annotation", columnDefinition = "TEXT")
     private String annotation;
 
-    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User owner;
+//    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
+//    @JoinColumn(name = "user_id", referencedColumnName = "id")
+//    private User owner;
 
     public void copy(Book source){
         authors = source.getAuthors();
         title = source.getTitle();
         annotation = source.getAnnotation();
-        owner = source.getOwner();
+//        owner = source.getOwner();
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", annotation='" + annotation + '\'' +
+                '}';
     }
 }

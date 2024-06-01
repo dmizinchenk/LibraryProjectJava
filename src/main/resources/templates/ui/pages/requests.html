@@ -7,10 +7,19 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,900,900italic,700italic,700,500italic,400italic,500,300italic,300'
+          rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+<!--    <link href='/styles/style.css' rel='stylesheet' type='text/css'>-->
 </head>
 <body>
 <!--    <th:block th:insert="~{ui/layouts/header.html::headerLayout}"></th:block>-->
-
+    <div class="row">
+        <div class="w-50 mx-auto container">
+            <a th:href="@{/}" class="btn btn-info">На главную</a>
+        </div>
+    </div>
+    <br>
     <div class="row">
         <div class="w-50 mx-auto container">
             <ul class="list-group cProductsList">
@@ -26,5 +35,19 @@
             </ul>
         </div>
     </div>
+
+<!--    <ul class="">-->
+<!--        <li th:each="request : ${requests}"  class="">-->
+<!--            <p class="p-0 m-0 flex-grow-1" th:text="${request.getUser().getUsername()} + ': ' + ${request.getBook().getTitle()}"></p>-->
+<!--            <form style="display: inline-block" th:method="POST" th:action="@{${action} + '/approve/{id}'(id=*{request.id})}">-->
+<!--                <input class="btn btn-success" type="submit" value="Accept">-->
+<!--            </form>-->
+<!--            <form style="display: inline-block" th:method="POST" th:action="@{${action} + '/decline/{id}'(id=*{request.id})}">-->
+<!--                <input class="btn btn-danger" type="submit" value="Decline">-->
+<!--            </form>-->
+<!--        </li>-->
+<!--    </ul>-->
+<!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>-->
+<!--    <script type="text/javascript" src="/js/main.min.js"></script>-->
 </body>
 </html>
