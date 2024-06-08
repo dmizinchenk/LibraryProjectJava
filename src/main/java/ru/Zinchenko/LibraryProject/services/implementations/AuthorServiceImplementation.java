@@ -39,6 +39,7 @@ public class AuthorServiceImplementation implements AuthorService {
         toUpdate.setName(author.getName());
         toUpdate.setSurname(author.getSurname());
         toUpdate.setMiddleName(author.getMiddleName());
+//        if(!author.getBooks().isEmpty())
         toUpdate.setBooks(author.getBooks());
 
         repository.save(toUpdate);

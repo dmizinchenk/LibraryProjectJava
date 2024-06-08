@@ -16,27 +16,23 @@
         <div id="container">
             <!-- Form Wrap Start -->
             <div class="form-wrap">
-                <form th:object="${book}" th:action="@{'/book' + ${action}}" th:method="post" enctype="multipart/form-data">
-                    <label for="topic">Список авторов</label>
-                    <select multiple class="form-control" id="topic" th:field="*{authors}">
-                        <option th:each="author : ${authorsList}"
-                                th:value="${author.getId()}" th:text="${author.getFullName()}"></option>
-                    </select>
+                <form th:object="${author}" th:action="@{'/authors' + ${action}}" th:method="post">
                     <div class="form-group">
-                        <label for="title">Название</label>
-                        <input type="text" th:field="*{title}" id="title">
+                        <label for="name">Имя</label>
+                        <input type="text" th:field="*{name}" id="name">
                     </div>
                     <div class="form-group">
-                        <label for="annotation">Аннотация</label>
-                        <textarea th:field="*{annotation}" id="annotation" style="height: 200px;"></textarea>
+                        <label for="middleName">Отчество</label>
+                        <input type="text" th:field="*{middleName}" id="middleName">
                     </div>
-
-                    <label for="cover">Заменить обложку:</label>
-                    <input name="cover" id="cover" type="file" placeholder="Загрузите фото" accept=".webp">
+                    <div class="form-group">
+                        <label for="surname">Фамилия</label>
+                        <input type="text" th:field="*{surname}" id="surname">
+                    </div>
                     <button type="submit">Save</button>
 
                 </form>
-                <form th:action="@{'/book/' + ${book.getId()}}" method="get">
+                <form th:action="@{'/authors'}" method="get">
                     <button type="submit">Back</button>
                 </form>
                 <!-- Form Close -->

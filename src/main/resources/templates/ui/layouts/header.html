@@ -37,18 +37,24 @@
                     </div>
 
                     <div id="wrapper-title-2">
+                        <a href="/authors" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE')">
+                            <div class="oldies object">Список авторов</div>
+                        </a>
+                    </div>
+
+                    <div id="wrapper-title-3">
                         <a href="/book/create" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE')">
                             <div class="oldies object">Добавить книгу</div>
                         </a>
                     </div>
 
-                    <div id="wrapper-title-3">
+                    <div id="wrapper-title-4">
                         <a href="/order/reserves" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE')">
                             <div class="recent object">Запросы на выдачу</div>
                         </a>
                     </div>
 
-                    <div id="wrapper-title-4">
+                    <div id="wrapper-title-5">
                         <a href="/order/returns" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE')">
                             <div class="oldies object">Запросы на сдачу</div>
                         </a>

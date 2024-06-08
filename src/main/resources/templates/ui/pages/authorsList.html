@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>List of authors</title>
+        <link href='https://fonts.googleapis.com/css?family=Roboto:400,900,900italic,700italic,700,500italic,400italic,500,300italic,300'
+              rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+        <link href='/styles/style.css' rel='stylesheet' type='text/css'>
+        <link href='/styles/myStyles.css' rel='stylesheet' type='text/css'>
+
+        <!-- Behavioral Meta Data -->
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    </head>
+    <body>
+        <th:block th:insert="~{/ui/layouts/header.html::headerLayout}"></th:block>
+
+        <div id="wrapper-container">
+            <div class="container object">
+                <a id="newAuthor" th:href="@{'/authors/create'}">Внести нового автора</a>
+                <div id="main-container-image">
+                    <ul class="myList" >
+                        <li th:each="author : ${authors}">
+                            <span th:text="${author.getFullName()}"></span>
+                            <a th:href="@{'/authors/' + *{author.id} + '/edit'}">Редактировать</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script type="text/javascript" src="/js/main.min.js"></script>
+    </body>
+</html>
