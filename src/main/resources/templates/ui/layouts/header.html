@@ -32,33 +32,53 @@
                     <div id="wrapper-title-1">
                         <a href="/admin" sec:authorize="hasRole('ROLE_ADMIN')">
                             <div class="top-rated object">Admin page</div>
-                            <div id="fleche-nav-1"></div>
+<!--                            <div id="fleche-nav-1"></div>-->
                         </a>
                     </div>
 
                     <div id="wrapper-title-2">
-                        <a href="/authors" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE')">
-                            <div class="oldies object">Список авторов</div>
-                        </a>
+                        <div class="recent object" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE')">
+                            <div class="dropdown">
+                                <div class="dropbtn">Библиотека</div>
+                                <div class="dropdown-content">
+                                    <a href="/authors">
+                                        Список авторов
+                                    </a>
+                                    <a href="/book/create">
+                                        Добавить книгу
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+<!--                    <div id="wrapper-title-2">-->
+<!--                        <a href="/authors" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE')">-->
+<!--                            <div class="oldies object">Список авторов</div>-->
+<!--                        </a>-->
+<!--                    </div>-->
+
+<!--                    <div id="wrapper-title-3">-->
+<!--                        <a href="/book/create" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE')">-->
+<!--                            <div class="oldies object">Добавить книгу</div>-->
+<!--                        </a>-->
+<!--                    </div>-->
 
                     <div id="wrapper-title-3">
-                        <a href="/book/create" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE')">
-                            <div class="oldies object">Добавить книгу</div>
-                        </a>
+                        <div class="recent object" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE')">
+                            <div class="dropdown">
+                                <div class="dropbtn">Запросы</div>
+                                <div class="dropdown-content">
+                                    <a href="/order/reserves">
+                                        На выдачу
+                                    </a>
+                                    <a href="/order/returns">
+                                        На сдачу
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div id="wrapper-title-4">
-                        <a href="/order/reserves" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE')">
-                            <div class="recent object">Запросы на выдачу</div>
-                        </a>
-                    </div>
-
-                    <div id="wrapper-title-5">
-                        <a href="/order/returns" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE')">
-                            <div class="oldies object">Запросы на сдачу</div>
-                        </a>
-                    </div>
                 </div>
             </div>
         </div>

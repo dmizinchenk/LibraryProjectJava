@@ -26,8 +26,8 @@ CREATE TABLE Books
     id SERIAL PRIMARY KEY,
     title VARCHAR(50) NOT NULL,
     annotation text NULL,
-    dateOfRent date DEFAULT NULL
---     user_id int REFERENCES Users(id) ON DELETE SET NULL DEFAULT NULL
+    dateOfRent date DEFAULT NULL,
+    books_count INT DEFAULT floor(random()*5)+1 NOT NULL
 );
 
 CREATE TABLE Orders

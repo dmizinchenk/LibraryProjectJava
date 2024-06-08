@@ -30,13 +30,18 @@
                         <label for="annotation">Аннотация</label>
                         <textarea th:field="*{annotation}" id="annotation" style="height: 200px;"></textarea>
                     </div>
-
-                    <label for="cover">Заменить обложку:</label>
-                    <input name="cover" id="cover" type="file" placeholder="Загрузите фото" accept=".webp">
+                    <div class="form-group">
+                        <label for="booksCount">Количество книг:</label>
+                        <input type="number" th:field="*{booksCount}" id="booksCount">
+                    </div>
+                    <div class="form-group">
+                        <label for="cover">Заменить обложку:</label>
+                        <input name="cover" id="cover" type="file" placeholder="Загрузите фото" accept=".webp">
+                    </div>
                     <button type="submit">Save</button>
 
                 </form>
-                <form th:action="@{'/book/' + ${book.getId()}}" method="get">
+                <form th:action="@{${book.getId() == null ? '/'  : '/book/' + book.getId()}}" method="get">
                     <button type="submit">Back</button>
                 </form>
                 <!-- Form Close -->

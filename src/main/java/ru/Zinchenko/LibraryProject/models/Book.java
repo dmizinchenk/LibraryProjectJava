@@ -28,6 +28,8 @@ public class Book {
     @Column(name = "annotation", columnDefinition = "TEXT")
     private String annotation;
 
+    @Column(name = "books_count")
+    private Integer booksCount;
 //    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
 //    @JoinColumn(name = "user_id", referencedColumnName = "id")
 //    private User owner;
@@ -36,15 +38,8 @@ public class Book {
         authors = source.getAuthors();
         title = source.getTitle();
         annotation = source.getAnnotation();
+        booksCount = source.getBooksCount();
 //        owner = source.getOwner();
     }
 
-    @Override
-    public String toString() {
-        return "Book{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", annotation='" + annotation + '\'' +
-                '}';
-    }
 }

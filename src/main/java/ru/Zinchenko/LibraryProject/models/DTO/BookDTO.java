@@ -16,4 +16,5 @@ public class BookDTO {
 //    private String authors;
     private String title;
     private String annotation;
+    private Integer booksCount;
 }

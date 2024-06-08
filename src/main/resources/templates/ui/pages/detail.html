@@ -22,6 +22,7 @@
 <!--                        <div class="title-icon"></div>-->
 <!--                    </a>-->
 
+                    <h3 style="float: right;">Доступное количество: <span th:text="${book.getBooksCount()}"/></h3>
                     <div class="title-text" th:each="author : ${book.authors}">
                         <p th:text="${author}"></p>
                     </div>

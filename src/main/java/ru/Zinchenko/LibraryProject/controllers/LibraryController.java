@@ -73,7 +73,11 @@ public class LibraryController {
     @GetMapping(value = "/book/{id}")
     public String categoryCatalogue(@PathVariable int id, Model model) {
         Book book = bookService.findOne(id);
-        BookDTO dto = new BookDTO(book.getId(), book.getAuthors().stream().map(Author::getFullName).collect(Collectors.toList()), book.getTitle(), book.getAnnotation());
+        BookDTO dto = new BookDTO(book.getId(),
+                book.getAuthors().stream().map(Author::getFullName).collect(Collectors.toList()),
+                book.getTitle(),
+                book.getAnnotation(),
+                book.getBooksCount());
         model.addAttribute("book", dto);
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -90,7 +94,7 @@ public class LibraryController {
                 isCanReturn = true;
             }
         }
-        model.addAttribute("isCanGet", !isHaveBook);
+        model.addAttribute("isCanGet", !isHaveBook && book.getBooksCount() > 0);
         model.addAttribute("isCanReturn", isCanReturn);
         return "ui/pages/detail";
     }

@@ -48,10 +48,12 @@ public class OrderController {
     @PostMapping("/reserves/approve/{id}")
     public String reservesApprove(@PathVariable int id){
         Order order = orderService.findOne(id);
-
-        User user = order.getUser();
+        Book book = bookService.findOne(order.getBook().getId());
+        book.setBooksCount(book.getBooksCount() - 1);
+        bookService.update(book);
+//        User user = order.getUser();
 //        user.getBooks().add(order.getBook());
-        userService.update(user);
+//        userService.update(user);
 
 //        order.setHaveOwner(true);
         order.setHandled(true);
@@ -75,6 +77,10 @@ public class OrderController {
     @PostMapping("/returns/approve/{id}")
     public String returnsApprove(@PathVariable int id){
         Order order = orderService.findOne(id);
+
+        Book book = bookService.findOne(order.getBook().getId());
+        book.setBooksCount(book.getBooksCount() + 1);
+        bookService.update(book);
 
         User user = order.getUser();
         user.getOrders().remove(order);
