@@ -18,12 +18,20 @@
 
         <div id="wrapper-container">
             <div class="container object">
-                <a class="link" th:href="@{'/authors/create'}">Внести нового автора</a>
+                <a class="link" th:href="@{'/'}">На главную</a>
+                <h3>История запросов: </h3>
                 <div id="main-container-image">
                     <ul class="myList" >
-                        <li th:each="author : ${authors}">
-                            <span th:text="${author.getFullName()}"></span>
-                            <a th:href="@{'/authors/' + *{author.id} + '/edit'}">Редактировать</a>
+                        <li th:each="order : ${orders}">
+                            <span th:text="${order.getBook().getAuthors()[0].getShortInfo()} + ': ' + ${order.getBook().getTitle()}"></span>
+                            <div th:switch="${order.state.toString()}">
+                                <p th:case="'RESERVE_NOT_HANDLED'">Запрос на рассмотрении</p>
+                                <p th:case="'RESERVE_APPROVE'">Книга выдана (<span th:text="${order.getReserved_by().getUsername()}"/>)</p>
+                                <p th:case="'RESERVE_DECLINE'">Выдача отклонена (<span th:text="${order.getReserved_by().getUsername()}"/>)</p>
+                                <p th:case="'RETURN_NOT_HANDLED'">Возврат на рассмотрении</p>
+                                <p th:case="'RETURN_APPROVE'">Возврат одобрен (<span th:text="${order.getReturned_by().getUsername()}"/>)</p>
+                                <p th:case="'RETURN_DECLINE'">Возврат отклонен (<span th:text="${order.getReturned_by().getUsername()}"/>)</p>
+                            </div>
                         </li>
                     </ul>
                 </div>

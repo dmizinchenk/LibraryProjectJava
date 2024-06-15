@@ -18,12 +18,15 @@
 
         <div id="wrapper-container">
             <div class="container object">
-                <a class="link" th:href="@{'/authors/create'}">Внести нового автора</a>
+                <a class="link" th:href="@{'/'}">На главную</a>
+                <h3 th:text="${head}"></h3>
                 <div id="main-container-image">
                     <ul class="myList" >
-                        <li th:each="author : ${authors}">
-                            <span th:text="${author.getFullName()}"></span>
-                            <a th:href="@{'/authors/' + *{author.id} + '/edit'}">Редактировать</a>
+                        <li th:each="order : ${orders}">
+                            <span th:text="${order.getBook().getAuthors()[0].getShortInfo()} + ': ' + ${order.getBook().getTitle()}"></span>
+                            <form th:method="POST" th:action="@{${link} + ${order.getId()}}">
+                                <input type="submit" th:value="${action}">
+                            </form>
                         </li>
                     </ul>
                 </div>

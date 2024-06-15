@@ -50,12 +50,12 @@ public class OrderServiceImplementation implements OrderService {
 
     @Override
     public List<Order> getAllRequestToReserve() {
-        return repository.findOrderByHandledAndHaveOwner(false, true);
+        return repository.findOrderByState(Order.State.RESERVE_NOT_HANDLED);
     }
 
     @Override
     public List<Order> getAllRequestToReturn() {
-        return repository.findOrderByHandledAndHaveOwner(false, false);
+        return repository.findOrderByState(Order.State.RETURN_NOT_HANDLED);
     }
 
     @Override

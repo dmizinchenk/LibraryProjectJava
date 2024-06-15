@@ -12,8 +12,8 @@
         <div id="wrapper-header">
             <div id="main-header" class="object">
                 <div class="logo">
-                    <a class="login" href="/login" sec:authorize="isAnonymous()">Login</a>
-                    <a class="login" href="/logout" sec:authorize="isAuthenticated()">Logout</a>
+                    <a class="login" href="/login" sec:authorize="isAnonymous()">Авторизация</a>
+                    <a class="login" href="/logout" sec:authorize="isAuthenticated()">Выход</a>
                 </div>
                 <div id="main_tip_search">
                     <form action="/" method="GET">
@@ -31,12 +31,34 @@
                 <div id="wrapper-sorting">
                     <div id="wrapper-title-1">
                         <a href="/admin" sec:authorize="hasRole('ROLE_ADMIN')">
-                            <div class="top-rated object">Admin page</div>
+                            <div class="top-rated object">Администрирование</div>
 <!--                            <div id="fleche-nav-1"></div>-->
                         </a>
                     </div>
 
                     <div id="wrapper-title-2">
+                        <div class="recent object" sec:authorize="isAuthenticated()">
+                            <div class="dropdown">
+                                <div class="dropbtn">Профиль</div>
+                                <div class="dropdown-content">
+                                    <a href="/profile">
+                                        Изменить данные
+                                    </a>
+                                    <a href="/profile/currentReserves">
+                                        Текущие запросы
+                                    </a>
+                                    <a href="/profile/onHandle">
+                                        Книги на руках
+                                    </a>
+                                    <a href="/profile/allOrders">
+                                        Все запросы
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="wrapper-title-3">
                         <div class="recent object" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE')">
                             <div class="dropdown">
                                 <div class="dropbtn">Библиотека</div>
@@ -63,7 +85,7 @@
 <!--                        </a>-->
 <!--                    </div>-->
 
-                    <div id="wrapper-title-3">
+                    <div id="wrapper-title-4">
                         <div class="recent object" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE')">
                             <div class="dropdown">
                                 <div class="dropbtn">Запросы</div>

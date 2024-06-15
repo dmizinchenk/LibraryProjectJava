@@ -35,8 +35,9 @@ CREATE TABLE Orders
     id SERIAL PRIMARY KEY ,
     bookid int NOT NULL REFERENCES Books(id),
     userid int REFERENCES Users(id),
-    is_handled bool NULL DEFAULT FALSE,
-    have_owner bool DEFAULT TRUE
+    state VARCHAR (25),
+    reserved_by int REFERENCES Users(id),
+    returned_by int REFERENCES Users(id)
 );
 
 CREATE TABLE AuthorsBooks

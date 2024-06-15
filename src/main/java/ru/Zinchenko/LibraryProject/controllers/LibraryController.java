@@ -19,8 +19,6 @@ import ru.Zinchenko.LibraryProject.services.interfaces.AuthorService;
 import ru.Zinchenko.LibraryProject.services.interfaces.BookService;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -35,7 +33,7 @@ public class LibraryController {
     private final BookService bookService;
     private final AuthorService authorService;
     private final UserServiceImplementation userService;
-    private final OrderServiceImplementation orderService;
+//    private final OrderServiceImplementation orderService;
 
     @GetMapping("/")
     public String home(@RequestParam(name = "search", required = false) String find, @RequestParam(name = "page", required = false) String page, Model model){
@@ -82,20 +80,29 @@ public class LibraryController {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User curUser = userService.findByUsername(auth.getName());
-        Optional<Order> order = orderService.findLastOrderByBookAndUser(curUser.getId(), id);
-        boolean isHaveBook = false;
-        boolean isCanReturn = false;
-        if(order.isPresent()){
-            Order o = order.get();
-            if(o.getBook().equals(book)){
-                isHaveBook = true;
-            }
-            if(o.getBook().equals(book) && o.isHaveOwner() && o.isHandled()){
-                isCanReturn = true;
-            }
-        }
-        model.addAttribute("isCanGet", !isHaveBook && book.getBooksCount() > 0);
-        model.addAttribute("isCanReturn", isCanReturn);
+
+//        Comparator<Order> comparator = new OrderDescComparator();
+        List<Order> orders = curUser.getOrders().stream()
+                .filter(order -> order.getBook().equals(book))
+                .toList();
+        boolean canGet = orders.isEmpty() || orders.stream().filter(order -> !order.getState().equals(Order.State.RETURN_APPROVE) && !order.getState().equals(Order.State.RESERVE_DECLINE)).toList().isEmpty();
+        boolean canReturn = !orders.stream().filter(order -> order.getState().equals(Order.State.RESERVE_APPROVE) || order.getState().equals(Order.State.RETURN_DECLINE)).toList().isEmpty();
+//        Optional<Order> order = orderService.findLastOrderByBookAndUser(curUser.getId(), id);
+//        boolean isHaveBook = false;
+//        boolean isCanReturn = false;
+//        if(order.isPresent()){
+//            Order o = order.get();
+//            if(o.getBook().equals(book)){
+//                isHaveBook = true;
+//            }
+//            if(o.getBook().equals(book) && o.isHaveOwner() && o.isHandled()){
+//                isCanReturn = true;
+//            }
+//        }
+//        model.addAttribute("isCanGet", !isHaveBook && book.getBooksCount() > 0);
+//        model.addAttribute("isCanReturn", isCanReturn);
+        model.addAttribute("isCanGet", canGet && book.getBooksCount() > 0);
+        model.addAttribute("isCanReturn", canReturn);
         return "ui/pages/detail";
     }
 
