@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.Zinchenko.LibraryProject.models.Book;
 import ru.Zinchenko.LibraryProject.models.Order;
+import ru.Zinchenko.LibraryProject.models.Review;
 import ru.Zinchenko.LibraryProject.security.entity.User;
 import ru.Zinchenko.LibraryProject.services.implementations.UserServiceImplementation;
 import ru.Zinchenko.LibraryProject.services.interfaces.BookService;
 import ru.Zinchenko.LibraryProject.services.interfaces.OrderService;
+import ru.Zinchenko.LibraryProject.services.interfaces.ReviewService;
 import ru.Zinchenko.LibraryProject.util.OrderDescComparator;
 
 import java.util.Optional;
@@ -25,12 +27,19 @@ public class OrderController {
     private final OrderService orderService;
     private final BookService bookService;
     private final UserServiceImplementation userService;
+    private final ReviewService reviewService;
 
+    private User getCurrentUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User curUser = userService.findByUsername(auth.getName());
+        return curUser;
+    }
     @Autowired
-    public OrderController(OrderService orderService, BookService bookService, UserServiceImplementation userService) {
+    public OrderController(OrderService orderService, BookService bookService, UserServiceImplementation userService, ReviewService reviewService) {
         this.orderService = orderService;
         this.bookService = bookService;
         this.userService = userService;
+        this.reviewService = reviewService;
     }
 
     @GetMapping("/reserves")
@@ -48,8 +57,7 @@ public class OrderController {
 
     @PostMapping("/reserves/approve/{id}")
     public String reservesApprove(@PathVariable int id){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User curUser = userService.findByUsername(auth.getName());
+        User curUser = getCurrentUser();
 
         Order order = orderService.findOne(id);
         order.setReserved_by(curUser);
@@ -59,13 +67,24 @@ public class OrderController {
         Book book = bookService.findOne(order.getBook().getId());
         book.setBooksCount(book.getBooksCount() - 1);
         bookService.update(book);
+
+        Review review = curUser.getReviews().stream().filter(r -> r.getBook().equals(book)).findFirst().orElse(null);
+        if(review == null){
+            review = new Review();
+            review.setUser(order.getUser());
+            review.setBook(book);
+            review = reviewService.save(review);
+            curUser.getReviews().add(review);
+            userService.update(curUser);
+        }
         return "redirect:/order/reserves";
 
     }
+
+
     @PostMapping("/reserves/decline/{id}")
     public String reservesDecline(@PathVariable int id){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User curUser = userService.findByUsername(auth.getName());
+        User curUser = getCurrentUser();
 
         Order order = orderService.findOne(id);
 //        User user = order.getUser();
@@ -79,8 +98,7 @@ public class OrderController {
     }
     @PostMapping("/returns/approve/{id}")
     public String returnsApprove(@PathVariable int id){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User curUser = userService.findByUsername(auth.getName());
+        User curUser = getCurrentUser();
 
         Order order = orderService.findOne(id);
 
@@ -101,8 +119,7 @@ public class OrderController {
     }
     @PostMapping("/returns/decline/{id}")
     public String returnsDecline(@PathVariable int id){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User curUser = userService.findByUsername(auth.getName());
+        User curUser = getCurrentUser();
 
         Order order = orderService.findOne(id);
         order.setState(Order.State.RETURN_DECLINE);
@@ -114,7 +131,7 @@ public class OrderController {
     @PostMapping(value = "/getBook/{bookId}")
     public String reserveBook(@PathVariable int bookId){
         Book book = bookService.findOne(bookId);
-        User curUser = userService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        User curUser = getCurrentUser();
 
         Order order = new Order();
         order.setUser(curUser);
@@ -129,7 +146,7 @@ public class OrderController {
     }
     @PostMapping(value = "/returnBook/{bookId}")
     public String returnBook(@PathVariable int bookId){
-        User curUser = userService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        User curUser = getCurrentUser();
 
 //        Optional<Order> order = orderService.findLastOrderByBookAndUser(curUser.getId(), bookId);
         Optional<Order> order = curUser.getOrders().stream().filter(o -> o.getBook().getId().equals(bookId)).max(new OrderDescComparator());

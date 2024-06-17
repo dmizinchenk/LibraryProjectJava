@@ -2,6 +2,8 @@ DROP TABLE IF EXISTS Authors;
 DROP TABLE IF EXISTS Users;
 DROP TABLE IF EXISTS Books;
 DROP TABLE IF EXISTS Orders;
+DROP TABLE IF EXISTS AuthorsBooks;
+DROP TABLE IF EXISTS Review;
 
 CREATE TABLE Users
 (
@@ -25,24 +27,35 @@ CREATE TABLE Books
 (
     id SERIAL PRIMARY KEY,
     title VARCHAR(50) NOT NULL,
-    annotation text NULL,
-    dateOfRent date DEFAULT NULL,
+    annotation TEXT NULL,
+    dateOfRent DATE DEFAULT NULL,
     books_count INT DEFAULT floor(random()*5)+1 NOT NULL
 );
 
 CREATE TABLE Orders
 (
     id SERIAL PRIMARY KEY ,
-    bookid int NOT NULL REFERENCES Books(id),
-    userid int REFERENCES Users(id),
+    bookid INT NOT NULL REFERENCES Books(id),
+    userid INT REFERENCES Users(id),
     state VARCHAR (25),
-    reserved_by int REFERENCES Users(id),
-    returned_by int REFERENCES Users(id)
+    reserved_by INT REFERENCES Users(id),
+    returned_by INT REFERENCES Users(id)
 );
 
 CREATE TABLE AuthorsBooks
 (
     id SERIAL PRIMARY KEY,
-    bookid int REFERENCES Books(id) NOT NULL,
-    authorid int REFERENCES Authors(id) NULL
+    bookid INT REFERENCES Books(id) NOT NULL,
+    authorid INT REFERENCES Authors(id) NULL
+);
+
+CREATE TABlE Review
+(
+    id SERIAL PRIMARY KEY,
+    userid INT NOT NULL REFERENCES Users(id) ON DELETE RESTRICT,
+    bookid INT NOT NULL REFERENCES Books(id) ON DELETE RESTRICT,
+    is_favorite BOOLEAN DEFAULT FALSE,
+    comment TEXT,
+    mark INT,
+    CONSTRAINT uniq_key UNIQUE (userid, bookid)
 )

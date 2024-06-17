@@ -38,11 +38,11 @@
                         <label for="cover">Заменить обложку:</label>
                         <input name="cover" id="cover" type="file" placeholder="Загрузите фото" accept=".webp">
                     </div>
-                    <button type="submit">Save</button>
+                    <button type="submit">Сохранить</button>
 
                 </form>
                 <form th:action="@{${book.getId() == null ? '/'  : '/book/' + book.getId()}}" method="get">
-                    <button type="submit">Back</button>
+                    <button type="submit">Назад</button>
                 </form>
                 <!-- Form Close -->
             </div>

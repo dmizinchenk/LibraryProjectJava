@@ -1,6 +1,5 @@
 package ru.Zinchenko.LibraryProject.security.entity;
 
-//import jakarta.persistence.*;
 import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ru.Zinchenko.LibraryProject.models.Book;
 import ru.Zinchenko.LibraryProject.models.DTO.UserDTO;
 import ru.Zinchenko.LibraryProject.models.Order;
+import ru.Zinchenko.LibraryProject.models.Review;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,7 +20,6 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 @AllArgsConstructor
-//@NoArgsConstructor
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,13 +32,13 @@ public class User implements UserDetails {
     private boolean isBloked;
     @Column(name = "password")
     private String password;
-//    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
-//    private List<Book> books = new ArrayList<>();
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Role role;
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Order> orders = new ArrayList<>();
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Review> reviews = new ArrayList<>();
 
     public User() {}
 
@@ -76,8 +75,8 @@ public class User implements UserDetails {
                 dto.getUsername(),
                 dto.isBloked(),
                 encoder.encode(dto.getPassword()),
-//                new ArrayList<>(),
                 dto.getRole(),
+                new ArrayList<>(),
                 new ArrayList<>()
                 );
     }
