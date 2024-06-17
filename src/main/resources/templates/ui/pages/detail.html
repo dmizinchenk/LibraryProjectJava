@@ -22,7 +22,10 @@
 <!--                        <div class="title-icon"></div>-->
 <!--                    </a>-->
 
-                    <h3 style="float: right;">Доступное количество: <span th:text="${book.getBooksCount()}"/></h3>
+                    <div style="float: right;">
+                        <h3>Доступное количество: <span th:text="${book.getBooksCount()}"/></h3>
+                        <h4>Рейтинг: <span th:text="${rating}"/></h4>
+                    </div>
                     <div class="title-text" th:each="author : ${book.authors}">
                         <p th:text="${author}"></p>
                     </div>
@@ -40,9 +43,6 @@
                         </div>
                     </div>
                 </div>
-
-
-
             </div>
 
             <form th:action="@{/}">
@@ -53,6 +53,12 @@
             </form>
             <form th:if="${isCanReturn}" method="post" th:action="@{'/order/returnBook/' + ${book.id}}">
                 <input type="submit" value="Вернуть книгу" style="margin-left: 15px; background-color: lightcoral;">
+            </form>
+            <form th:unless="${favorite}" method="post" th:action="@{'/book/' + ${book.id} + '/addToFav'}">
+                <input type="submit" value="В избранное" style="margin-left: 15px; background-color: yellowgreen;">
+            </form>
+            <form th:if="${favorite}" method="post" th:action="@{'/book/' + ${book.id} + '/removeFromFav'}">
+                <input type="submit" value="Из избранного" style="margin-left: 15px; background-color: gray;">
             </form>
             <form sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE')" method="get" th:action="@{'/book/' + ${book.id} + '/edit'}" style="margin-left: 15px;">
                 <input type="submit" value="Редактировать" style="margin-left: 15px;">

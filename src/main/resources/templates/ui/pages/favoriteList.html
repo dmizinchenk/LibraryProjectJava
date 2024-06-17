@@ -18,12 +18,15 @@
 
         <div id="wrapper-container">
             <div class="container object">
-                <a class="link" th:href="@{'/authors/create'}">Внести нового автора</a>
+                <a class="link" th:href="@{'/'}">На главную</a>
+                <h3 th:text="${head}"></h3>
                 <div id="main-container-image">
                     <ul class="myList" >
-                        <li th:each="author : ${authors}">
-                            <span th:text="${author.getFullName()}"></span>
-                            <a th:href="@{'/authors/' + *{author.id} + '/edit'}">Редактировать</a>
+                        <li th:each="favorite : ${favorites}">
+                            <span th:text="${favorite.getBook().getAuthors()[0].getShortInfo()} + ': ' + ${favorite.getBook().getTitle()}"></span>
+                            <form class="right-centre"  th:method="POST" th:action="@{'/profile/favorites/' + ${favorite.getId()} + '/removeFromFav'}">
+                                <input type="submit" value="Удалить из списка">
+                            </form>
                         </li>
                     </ul>
                 </div>

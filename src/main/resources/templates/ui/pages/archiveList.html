@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>List of authors</title>
+        <link href='https://fonts.googleapis.com/css?family=Roboto:400,900,900italic,700italic,700,500italic,400italic,500,300italic,300'
+              rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+        <link href='/styles/style.css' rel='stylesheet' type='text/css'>
+        <link href='/styles/myStyles.css' rel='stylesheet' type='text/css'>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+        <!-- Behavioral Meta Data -->
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    </head>
+    <body>
+        <th:block th:insert="~{/ui/layouts/header.html::headerLayout}"></th:block>
+
+        <div id="wrapper-container">
+            <div class="container object">
+                <a class="link" th:href="@{'/'}">На главную</a>
+                <h3 th:text="${head}"></h3>
+                <div id="main-container-image">
+                    <ul class="myList" >
+                        <li th:each="review : ${reviews}">
+                            <span th:text="${review.getBook().getAuthors()[0].getShortInfo()} + ': ' + ${review.getBook().getTitle()}"></span>
+<!--                            <div class="form_item">-->
+<!--                                <div class="rating">-->
+<!--                                    <div class="rating_body">-->
+<!--                                        <div class="rating_active"></div>-->
+<!--                                        <div class="rating_items">-->
+<!--                                            <input type="radio" class="rating_item" id="star-1" name="rating" value="1" th:checked="${review.getMark()==1}">-->
+<!--                                            <label for="star-1" title="Оценка «1»"></label>-->
+<!--                                            <input type="radio" class="rating_item" id="star-2" name="rating" value="2" th:checked="${review.getMark()==2}">-->
+<!--                                            <label for="star-2" title="Оценка «2»"></label>-->
+<!--                                            <input type="radio" class="rating_item" id="star-3" name="rating" value="3" th:checked="${review.getMark()==3}">-->
+<!--                                            <label for="star-3" title="Оценка «3»"></label>-->
+<!--                                            <input type="radio" class="rating_item" id="star-4" name="rating" value="4" th:checked="${review.getMark()==4}">-->
+<!--                                            <label for="star-4" title="Оценка «4»"></label>-->
+<!--                                            <input type="radio" class="rating_item" id="star-5" name="rating" value="5" th:checked="${review.getMark()==5}">-->
+<!--                                            <label for="star-5" title="Оценка «5»"></label>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+                            <form method="post" th:action="${'/profile/rate/' + review.getId()}">
+<!--                                <input type="number" name="rate" min="1" max="5" th:value="${review.getMark()}" onchange="this.form.submit()">-->
+                                <span>Моя оценка: </span>
+                                <div style="display: inline-block;">
+                                    <input type="radio" class="rating_item" id="star-1" name="rating" value="1" th:checked="${review.getMark()==1}" onchange="this.form.submit()">
+                                    <label for="star-1" title="Оценка «1»">1</label>
+                                    <input type="radio" class="rating_item" id="star-2" name="rating" value="2" th:checked="${review.getMark()==2}" onchange="this.form.submit()">
+                                    <label for="star-2" title="Оценка «2»">2</label>
+                                    <input type="radio" class="rating_item" id="star-3" name="rating" value="3" th:checked="${review.getMark()==3}" onchange="this.form.submit()">
+                                    <label for="star-3" title="Оценка «3»">3</label>
+                                    <input type="radio" class="rating_item" id="star-4" name="rating" value="4" th:checked="${review.getMark()==4}" onchange="this.form.submit()">
+                                    <label for="star-4" title="Оценка «4»">4</label>
+                                    <input type="radio" class="rating_item" id="star-5" name="rating" value="5" th:checked="${review.getMark()==5}" onchange="this.form.submit()">
+                                    <label for="star-5" title="Оценка «5»">5</label>
+                                </div>
+                            </form>
+                            <form th:method="POST" th:action="@{'/profile/addComment/' + ${review.getId()}}" >
+                                <textarea maxlength="1000" name="comment" id="comment" placeholder="Моя заметка (1000 символов макс)" >[[${review.comment}]]</textarea>
+                                <input type="submit" value="Сохранить">
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script type="text/javascript" src="/js/main.min.js"></script>
+<!--        <script>-->
+<!--            const ratings = document.querySelectorAll('.rating');-->
+<!--            if(ratings.length > 0){-->
+<!--                initRatings();-->
+<!--            }-->
+
+<!--            function initRatings(){-->
+<!--                let ratingActive, ratingValue;-->
+<!--                for (let index = 0; index < ratings.length; index++){-->
+<!--                    const rating = ratings[index];-->
+<!--                    initRating(rating);-->
+<!--                }-->
+<!--            }-->
+
+<!--            function initRating(rating){-->
+
+<!--            }-->
+
+<!--            function initRatingVars(rating){-->
+<!--                ratingActive = rating.querySelector('.rating_active');-->
+<!--                // ratingValue = rating.querySelector('.rating_value');-->
+<!--            }-->
+
+<!--            function setRatingActiveWidth(index = ){-->
+<!--                const rating-->
+<!--            }-->
+<!--        </script>-->
+    </body>
+</html>

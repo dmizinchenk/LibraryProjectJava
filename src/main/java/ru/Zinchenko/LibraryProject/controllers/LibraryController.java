@@ -12,15 +12,14 @@ import ru.Zinchenko.LibraryProject.models.Author;
 import ru.Zinchenko.LibraryProject.models.Book;
 import ru.Zinchenko.LibraryProject.models.DTO.BookDTO;
 import ru.Zinchenko.LibraryProject.models.Order;
+import ru.Zinchenko.LibraryProject.models.Review;
 import ru.Zinchenko.LibraryProject.security.entity.User;
-import ru.Zinchenko.LibraryProject.services.implementations.OrderServiceImplementation;
 import ru.Zinchenko.LibraryProject.services.implementations.UserServiceImplementation;
 import ru.Zinchenko.LibraryProject.services.interfaces.AuthorService;
 import ru.Zinchenko.LibraryProject.services.interfaces.BookService;
+import ru.Zinchenko.LibraryProject.services.interfaces.ReviewService;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -35,8 +34,13 @@ public class LibraryController {
     private final BookService bookService;
     private final AuthorService authorService;
     private final UserServiceImplementation userService;
-    private final OrderServiceImplementation orderService;
+    private final ReviewService reviewService;
+//    private final OrderServiceImplementation orderService;
 
+    private User getCurrentUser(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return userService.findByUsername(auth.getName());
+    }
     @GetMapping("/")
     public String home(@RequestParam(name = "search", required = false) String find, @RequestParam(name = "page", required = false) String page, Model model){
 
@@ -70,9 +74,9 @@ public class LibraryController {
     }
 
 
-    @GetMapping(value = "/book/{id}")
-    public String categoryCatalogue(@PathVariable int id, Model model) {
-        Book book = bookService.findOne(id);
+    @GetMapping(value = "/book/{bookId}")
+    public String categoryCatalogue(@PathVariable int bookId, Model model) {
+        Book book = bookService.findOne(bookId);
         BookDTO dto = new BookDTO(book.getId(),
                 book.getAuthors().stream().map(Author::getFullName).collect(Collectors.toList()),
                 book.getTitle(),
@@ -80,22 +84,35 @@ public class LibraryController {
                 book.getBooksCount());
         model.addAttribute("book", dto);
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User curUser = userService.findByUsername(auth.getName());
-        Optional<Order> order = orderService.findLastOrderByBookAndUser(curUser.getId(), id);
-        boolean isHaveBook = false;
-        boolean isCanReturn = false;
-        if(order.isPresent()){
-            Order o = order.get();
-            if(o.getBook().equals(book)){
-                isHaveBook = true;
-            }
-            if(o.getBook().equals(book) && o.isHaveOwner() && o.isHandled()){
-                isCanReturn = true;
-            }
+        User curUser = getCurrentUser();
+
+        List<Order> orders = curUser.getOrders().stream()
+                .filter(order -> order.getBook().equals(book))
+                .toList();
+        boolean canGet = orders.isEmpty() || orders.stream().filter(order -> !order.getState().equals(Order.State.RETURN_APPROVE) && !order.getState().equals(Order.State.RESERVE_DECLINE)).toList().isEmpty();
+        boolean canReturn = !orders.stream().filter(order -> order.getState().equals(Order.State.RESERVE_APPROVE) || order.getState().equals(Order.State.RETURN_DECLINE)).toList().isEmpty();
+
+        Review review = curUser.getReviews().stream().filter(r -> r.getBook().equals(book)).findFirst().orElse(null);
+        if (review == null || !review.isFavorite()){
+            model.addAttribute("favorite", false);
         }
-        model.addAttribute("isCanGet", !isHaveBook && book.getBooksCount() > 0);
-        model.addAttribute("isCanReturn", isCanReturn);
+        else {
+            model.addAttribute("favorite", true);
+        }
+
+        List<Integer> marks = reviewService.getMarks(bookId);
+        if(marks.isEmpty()){
+            model.addAttribute("rating", '-');
+        }
+        else {
+            double sum = marks.stream()
+                    .mapToInt(Integer::intValue)
+                    .average().orElse(0);
+            model.addAttribute("rating", String.format("%.1f",sum));
+        }
+
+        model.addAttribute("isCanGet", canGet && book.getBooksCount() > 0);
+        model.addAttribute("isCanReturn", canReturn);
         return "ui/pages/detail";
     }
 
@@ -163,5 +180,41 @@ public class LibraryController {
     public String deleteBook(@PathVariable int id){
         bookService.deleteById(id);
         return "redirect:/";
+    }
+
+    @PostMapping(value = "/book/{id}/addToFav")
+    public String toFavorite(@PathVariable int id){
+        User curUser = getCurrentUser();
+
+        Optional<Review> reviewFromDB = reviewService.getReviewByUserAndBookId(curUser, id);
+        Review review;
+        if(reviewFromDB.isPresent()){
+            review = reviewFromDB.get();
+        }
+        else {
+            Book book = bookService.findOne(id);
+            review = new Review();
+            review.setUser(curUser);
+            review.setBook(book);
+        }
+        review.setFavorite(true);
+        review = reviewService.save(review);
+
+        if(reviewFromDB.isEmpty()){
+            curUser.getReviews().add(review);
+            userService.update(curUser);
+        }
+
+        return "redirect:/book/" + id;
+    }
+    @PostMapping(value = "/book/{id}/removeFromFav")
+    public String fromFavorite(@PathVariable int id){
+        User curUser = getCurrentUser();
+        Review review = curUser.getReviews().stream().filter(r -> r.getBook().getId().equals(id)).findFirst().orElse(null);
+        if(review != null){
+            review.setFavorite(false);
+            reviewService.update(review);
+        }
+        return "redirect:/book/" + id;
     }
 }

@@ -30,16 +30,12 @@ public class Book {
 
     @Column(name = "books_count")
     private Integer booksCount;
-//    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id", referencedColumnName = "id")
-//    private User owner;
 
     public void copy(Book source){
         authors = source.getAuthors();
         title = source.getTitle();
         annotation = source.getAnnotation();
         booksCount = source.getBooksCount();
-//        owner = source.getOwner();
     }
 
 }

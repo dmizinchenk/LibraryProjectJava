@@ -7,7 +7,9 @@
 </head>
 <body>
     <h2>Please, login or register</h2>
+    <h3>[[${regError}]]</h3>
     <div th:if="${param.error}" style="color: red;">Incorrect login or password</div>
+    <div th:if="${regError != null}" style="color: red;" th:text="${regError}"></div>
     <div class="container" id="container">
         <div class="form-container sign-up-container">
             <form th:method="POST" th:action="@{/register}" th:object="${user}">
@@ -15,9 +17,9 @@
                 <span>or use your email for registration</span>
                 <input type="text" th:field="*{name}" placeholder="username"/>
                 <input type="email" th:field="*{username}" placeholder="email"/>
-                <div style="color: red;" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username error</div>
+<!--                <div style="color: red;" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username error</div>-->
                 <input type="password" th:field="*{password}" placeholder="password"/>
-                <div style="color: red;" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</div>
+<!--                <div style="color: red;" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</div>-->
                 <button>Sign Up</button>
             </form>
         </div>

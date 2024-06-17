@@ -20,10 +20,11 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             """, nativeQuery = true)
     Optional<Order> findLastOrderByUserIdAndBookId(@Param("userId") int userId, @Param("bookId") int bookId);
 
-    @Query(value = """
-            SELECT Orders.*
-            FROM Orders
-            WHERE Orders.is_handled = :isHandled AND Orders.have_owner = :haveOwner
-            """, nativeQuery = true)
-    List<Order> findOrderByHandledAndHaveOwner(@Param("isHandled") boolean isHandled, @Param("haveOwner") boolean haveOwner);
+    List<Order> findOrderByState(Order.State state);
+//    @Query(value = """
+//            SELECT Orders.*
+//            FROM Orders
+//            WHERE Orders.is_handled = :isHandled AND Orders.have_owner = :haveOwner
+//            """, nativeQuery = true)
+//    List<Order> findOrderByHandledAndHaveOwner(@Param("isHandled") boolean isHandled, @Param("haveOwner") boolean haveOwner);
 }
