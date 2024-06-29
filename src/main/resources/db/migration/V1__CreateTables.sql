@@ -29,7 +29,8 @@ CREATE TABLE Books
     title VARCHAR(50) NOT NULL,
     annotation TEXT NULL,
     dateOfRent DATE DEFAULT NULL,
-    books_count INT DEFAULT floor(random()*5)+1 NOT NULL
+    books_count INT DEFAULT floor(random()*5)+1 NOT NULL,
+    pathToFile TEXT NULL
 );
 
 CREATE TABLE Orders

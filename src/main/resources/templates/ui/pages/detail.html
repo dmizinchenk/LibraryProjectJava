@@ -34,7 +34,7 @@
 
                 <div class="work">
                     <figure class="white">
-                        <img th:src="@{'/img/Books/' + ${book.title} + '.webp'}" alt="/img/no_image.png" style="width: 250px; height: 250px" />
+                        <img th:src="@{${book.pathToFile}}" alt="/img/icons/no_image.png" style="width: 250px; height: 250px" />
                     </figure>
 
                     <div class="wrapper-text-description">

@@ -35,7 +35,6 @@ public class LibraryController {
     private final AuthorService authorService;
     private final UserServiceImplementation userService;
     private final ReviewService reviewService;
-//    private final OrderServiceImplementation orderService;
 
     private User getCurrentUser(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -64,6 +63,7 @@ public class LibraryController {
                                     .collect(Collectors.toList()))
                         .title(b.getTitle())
                         .annotation(b.getAnnotation())
+                        .pathToFile(b.getPathToFile())
                         .build())
                 .collect(Collectors.toList());
 
@@ -81,7 +81,8 @@ public class LibraryController {
                 book.getAuthors().stream().map(Author::getFullName).collect(Collectors.toList()),
                 book.getTitle(),
                 book.getAnnotation(),
-                book.getBooksCount());
+                book.getBooksCount(),
+                book.getPathToFile());
         model.addAttribute("book", dto);
 
         User curUser = getCurrentUser();
@@ -135,16 +136,17 @@ public class LibraryController {
             String fileName = file.getOriginalFilename();
             if (fileName != null && !fileName.isBlank()){
                 String ext = fileName.substring(fileName.lastIndexOf("."));
-                Path path = Paths.get("D:\\Обучение Шаг\\Java\\LibraryProject\\src\\main\\resources\\static\\img\\Books\\" + book.getTitle() + ext);
+                Path path = Paths.get("D:\\Обучение Шаг\\Java\\LibraryProject\\src\\main\\resources\\static\\img\\Books\\" + book.getId() + ext);
                 Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+                book.setPathToFile("/img/Books/" + book.getId() + ext);
             }
+
+            bookService.update(book);
         }
         catch (IOException e)
         {
             throw new RuntimeException(e);
         }
-
-        bookService.update(book);
         return "redirect:/book/" + book.getId();
     }
     @GetMapping("/book/create")
@@ -161,19 +163,21 @@ public class LibraryController {
     public String createBook(@ModelAttribute("book") Book book, @RequestParam("cover") MultipartFile file) {
 
         try{
+            book = bookService.save(book);
             String fileName = file.getOriginalFilename();
             if (fileName != null && !fileName.isBlank()){
                 String ext = fileName.substring(fileName.lastIndexOf("."));
-                Path path = Paths.get("D:\\Обучение Шаг\\Java\\LibraryProject\\src\\main\\resources\\static\\img\\Books\\" + book.getTitle() + ext);
+                Path path = Paths.get("D:\\Обучение Шаг\\Java\\LibraryProject\\src\\main\\resources\\static\\img\\Books\\" + book.getId() + ext);
                 Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+                book.setPathToFile("/img/Books/" + book.getId() + ext);
+                bookService.update(book);
             }
+            return "redirect:/book/" + book.getId();
         }
         catch (IOException e)
         {
             throw new RuntimeException(e);
         }
-
-        return "redirect:/book/" + bookService.save(book).getId();
     }
 
     @PostMapping(value = "/book/{id}/delete")

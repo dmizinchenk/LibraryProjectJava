@@ -31,7 +31,7 @@
 
                     <figure class="white" th:each="book : ${books}">
                         <a th:href="@{/book/{id}(id=${book.id})}"> <!-- details.html -->
-                            <img th:src="@{'/img/Books/' + ${book.title} + '.webp'}" alt="/img/no_image.png" style="width: 250px; height: 250px"/>
+                            <img th:src="@{${book.pathToFile == null || book.pathToFile.isEmpty() ? '/img/icons/no_image.png' : book.getPathToFile()}}" alt="No image" style="width: 250px; height: 250px"/>
                             <dl>
 <!--                                <dt th:text="${book.authors}"></dt>-->
                                 <dt th:each="author : ${book.authors}">

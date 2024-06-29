@@ -31,11 +31,15 @@ public class Book {
     @Column(name = "books_count")
     private Integer booksCount;
 
+    @Column(name = "pathtofile")
+    private String pathToFile = "";
+
     public void copy(Book source){
         authors = source.getAuthors();
         title = source.getTitle();
         annotation = source.getAnnotation();
         booksCount = source.getBooksCount();
+        pathToFile = source.getPathToFile();
     }
 
 }

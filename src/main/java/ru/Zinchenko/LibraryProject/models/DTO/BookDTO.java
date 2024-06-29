@@ -13,8 +13,8 @@ import java.util.List;
 public class BookDTO {
     private int id;
     private List<String> authors = new ArrayList<>();
-//    private String authors;
     private String title;
     private String annotation;
     private Integer booksCount;
+    private String pathToFile;
 }
